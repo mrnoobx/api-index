@@ -1,14 +1,15 @@
-FROM python:3.11-slim
+# syntax=docker/dockerfile:1
+
+FROM python:3.10-slim
 
 WORKDIR /app
 
-COPY terabox_api.py requirements.txt /app/
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt gunicorn
+COPY . .
 
-# Expose Flask port
+ENV PORT=5000
 EXPOSE 5000
 
-# Start using Gunicorn (production server)
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "terabox_api:app"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "terabox_api:app", "--worker-class", "aiohttp.GunicornWebWorker"]
