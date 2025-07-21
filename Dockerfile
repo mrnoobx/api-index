@@ -10,5 +10,5 @@ COPY . .
 ENV PORT=5000
 EXPOSE 5000
 
-# ✅ Fixed: Using gthread worker
-CMD ["gunicorn", "-w", "4", "-k", "gthread", "-b", "0.0.0.0:5000", "terabox_api:app"]
+# ✅ Correct worker: use gthread for async Flask
+CMD ["gunicorn", "-w", "4", "-k", "gthread", "-b", "0.0.0.0:$PORT", "terabox_api:app"]
